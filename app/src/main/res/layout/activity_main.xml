@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="K-Means Visualizer"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
 
     <EditText
         android:id="@+id/clusterInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter k (clusters)"
-        android:inputType="number"
-        android:layout_margin="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/tvTitle"
+        android:layout_alignParentStart="true"
+        android:layout_margin="6dp"
+        android:layout_marginStart="109dp"
+
+        android:layout_marginTop="17dp"
+
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
+        android:hint="Enter k (no. of clusters)"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/runKMeansButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Run K-Means"
-        android:layout_below="@id/clusterInput"
+        android:layout_below="@id/tvTitle"
+        android:layout_toRightOf="@id/clusterInput"
         android:layout_centerHorizontal="true"
-        android:layout_margin="8dp" />
+        />
 
     <com.puiaxyz.k_means.ClusterView
         android:id="@+id/clusterView"

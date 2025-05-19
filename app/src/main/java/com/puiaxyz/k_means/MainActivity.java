@@ -1,11 +1,11 @@
 package com.puiaxyz.k_means;
 
-
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,6 +14,9 @@ public class MainActivity extends AppCompatActivity {
     private ClusterView clusterView;
     private EditText clusterInput;
     private Button runButton;
+    private Handler handler = new Handler();
+    private int delayMillis =1200  ;  // speed
+    private KMeans kMeans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,10 @@ public class MainActivity extends AppCompatActivity {
         clusterInput = findViewById(R.id.clusterInput);
         runButton = findViewById(R.id.runKMeansButton);
 
-
         clusterView.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 points.add(new Point(event.getX(), event.getY()));
-                clusterView.setPoints(points);  // update immediately
+                clusterView.setPoints(points);
                 return true;
             }
             return false;
@@ -42,15 +44,27 @@ public class MainActivity extends AppCompatActivity {
             }
 
             int k = Integer.parseInt(kValue);
-            if (k <= 0 || k > points.size() ) {
-
+            if (k <= 0 || k > points.size()) {
                 Toast.makeText(this, "Invalid number of clusters", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            KMeans kMeans = new KMeans(points, k);
-            kMeans.run();
-            clusterView.setPoints(points);
+            kMeans = new KMeans(points, k);
+            kMeans.initializeCentroids();
+            runIteration();
+        });
+    }
+
+    private void runIteration() {
+        kMeans.stepIteration((updatedPoints, centroids, isFinished) -> {
+            clusterView.setPoints(updatedPoints);
+            clusterView.setCentroids(centroids);
+
+            if (!isFinished) {
+                handler.postDelayed(this::runIteration, delayMillis);
+            } else {
+                Toast.makeText(this, "Clustering Complete!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
